@@ -1,7 +1,7 @@
 # Firebears Recording Functions
 
 The classes in `org.firebears.recording` allows robot motion to be recorded
-out to text files in, and then later played back on the robot.  These recording
+out to text files, and then later played back on the robot.  These recording
 files can be manipulated in a text editor or a spreadsheet  program.  It should 
 also be easy to create software that reads and writes recordings.  It should 
 also be possible to integrate to other motion profiling packages.
