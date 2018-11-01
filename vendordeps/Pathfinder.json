@@ -1,0 +1,20 @@
+{
+    "fileName": "Pathfinder.json",
+    "name": "Pathfinder-Java",
+    "version": "1.8",
+    "mavenUrls": [
+        "http://dev.imjac.in/maven"
+    ],
+    "jsonUrl": "",
+    "javaDependencies": [
+        {
+            "groupId": "jaci.pathfinder",
+            "artifactId": "Pathfinder-Java",
+            "version": "1.8"
+        }
+    ],
+    "jniDependencies": [
+    ],
+    "cppDependencies": [
+    ]
+}
