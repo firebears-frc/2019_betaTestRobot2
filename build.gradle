@@ -2,10 +2,10 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-1"
+    id "edu.wpi.first.GradleRIO" version "2019.0.0-beta0-pre6"
 }
 
-def ROBOT_MAIN_CLASS = "org.firebears.Main"
+def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
