@@ -1,7 +1,10 @@
 plugins {
     id "java"
-    id "eclipse"
     id "idea"
+<<<<<<< HEAD
+=======
+    id "eclipse"
+>>>>>>> b61eec4ea39c005208dc1bb162389c61950e928b
     id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-2a"
 }
 
@@ -43,7 +46,7 @@ dependencies {
     compile javaVendorLibraries()
     nativeZip jniRoboRIOVendorLibraries()
     nativeDesktopZip jniDesktopVendorLibraries()
-    testCompile 'junit:junit:4.12'
+    // testCompile 'junit:junit:4.12'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
