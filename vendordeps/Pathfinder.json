@@ -6,6 +6,8 @@
         "http://dev.imjac.in/maven"
     ],
     "jsonUrl": "",
+    "cppDependencies": [
+    ],
     "javaDependencies": [
         {
             "groupId": "jaci.pathfinder",
@@ -14,7 +16,5 @@
         }
     ],
     "jniDependencies": [
-    ],
-    "cppDependencies": [
     ]
 }
