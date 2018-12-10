@@ -1,9 +1,10 @@
 {
-    "fileName": "Pathfinder.json",
-    "name": "Pathfinder-Java",
-    "version": "1.8",
+    "fileName": "PathfinderOLD.json",
+    "name": "PathfinderOld",
+    "version": "2019.1.10",
+    "uuid": "7194a2d4-2860-4bcc-86c0-97879737d875",
     "mavenUrls": [
-        "http://dev.imjac.in/maven"
+        "https://dev.imjac.in/maven"
     ],
     "jsonUrl": "",
     "cppDependencies": [
@@ -12,7 +13,12 @@
         {
             "groupId": "jaci.pathfinder",
             "artifactId": "Pathfinder-Java",
-            "version": "1.8"
+            "version": "2019.1.10"
+        },
+        {
+            "groupId": "jaci.jniloader",
+            "artifactId": "JNILoader",
+            "version": "1.0.0"
         }
     ],
     "jniDependencies": [
