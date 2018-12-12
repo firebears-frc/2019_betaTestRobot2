@@ -2,7 +2,6 @@ package org.firebears;
 
 import static org.firebears.util.Config.*;
 
-import org.firebears.commands.AutonomousCommand;
 import org.firebears.motion.TrajectoryFactory;
 import org.firebears.recording.RecordingFactory;
 import org.firebears.subsystems.Chassis;
@@ -65,8 +64,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new AutonomousCommand();
-		// schedule the autonomous command (example)
+		// TODO:  select the autonomous command
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
 		}

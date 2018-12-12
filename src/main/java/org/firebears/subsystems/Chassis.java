@@ -28,9 +28,8 @@ public class Chassis extends Subsystem {
 	private final DifferentialDrive robotDrive;
 
 	public static final int PID_IDX = 0;
-	public static final double ENCODER_TICKS_PER_INCH = 52.6;
-	public static final double WHEEL_BASE_IN_INCHES = 20.0;
-
+	public static final double ENCODER_TICKS_PER_FOOT = 52.6 / 12.0;
+	public static final double WHEEL_BASE_IN_FEET = 20.0 / 12.0;
 	public Chassis() {
 		Preferences config = Preferences.getInstance();
 
@@ -80,24 +79,24 @@ public class Chassis extends Subsystem {
 	}
 
 	/**
-	 * @return Distance traveled in inches, since the robot was started.
+	 * @return Distance traveled in feet, since the robot was started.
 	 */
-	public double inchesTraveled() {
-		return (inchesTraveledLeft() + inchesTraveledRight()) / 2;
+	public double feetTraveled() {
+		return (feetTraveledLeft() + feetTraveledRight()) / 2;
 	}
 	
 	/**
-	 * @return Distance traveled by the left wheels in inches.
+	 * @return Distance traveled by the left wheels in feet.
 	 */
-	public double inchesTraveledLeft() {
-		return frontLeft.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_INCH;
+	public double feetTraveledLeft() {
+		return frontLeft.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_FOOT;
 	}
 
 	/**
-	 * @return Distance traveled by the right wheels in inches.
+	 * @return Distance traveled by the right wheels in feet.
 	 */
-	public double inchesTraveledRight() {
-		return frontRight.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_INCH;
+	public double feetTraveledRight() {
+		return frontRight.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_FOOT;
 	}
 
 
