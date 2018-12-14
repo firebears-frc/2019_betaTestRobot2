@@ -75,6 +75,7 @@ public class PlayRecordingCommand extends Command {
             iter = recording.iterator();
             currentLine = iter.hasNext() ? iter.next() : null;
         }
+        recording.setAllEnabled(true);
     }
 
     protected void execute() {
@@ -96,6 +97,7 @@ public class PlayRecordingCommand extends Command {
         if (useLatestRecording) {
             recording = null;
         }
+        recording.setAllEnabled(false);
     }
 
     private Recording loadRecording(File file) {

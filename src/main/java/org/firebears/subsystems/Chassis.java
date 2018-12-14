@@ -6,9 +6,12 @@ import java.util.List;
 import org.firebears.commands.ChassisDriveCommand;
 import org.firebears.recording.Recordable;
 import org.firebears.recording.RecordingFactory.SpeedControllerRecordable;
+import org.firebears.recording.RecordingFactory.PIDRecordable;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -49,8 +52,44 @@ public class Chassis extends Subsystem {
 	}
 
 	public List<Recordable> getRecordables() {
-		return Arrays.asList(new SpeedControllerRecordable(leftMotors, "leftMotors"),
-				new SpeedControllerRecordable(rightMotors, "rightMotors"));
+		// Preferences config = Preferences.getInstance();
+		// double motionP = config.getDouble("chassis.motion.p", 1.0);
+		// double motionI = config.getDouble("chassis.motion.i", 0.0);
+		// double motionD = config.getDouble("chassis.motion.d", 0.0);
+		// PIDSource leftSource = new PIDSource(){
+		// 	@Override
+		// 	public void setPIDSourceType(PIDSourceType pidSource) {
+		// 	}
+		// 	@Override
+		// 	public double pidGet() {
+		// 		return feetTraveledLeft();
+		// 	}
+		// 	@Override
+		// 	public PIDSourceType getPIDSourceType() {
+		// 		return PIDSourceType.kDisplacement;
+		// 	}
+		// };
+		// PIDSource rightSource = new PIDSource(){
+		// 	@Override
+		// 	public void setPIDSourceType(PIDSourceType pidSource) {
+		// 	}
+		// 	@Override
+		// 	public double pidGet() {
+		// 		return feetTraveledRight();
+		// 	}
+		// 	@Override
+		// 	public PIDSourceType getPIDSourceType() {
+		// 		return PIDSourceType.kDisplacement;
+		// 	}
+		// };
+
+		// return Arrays.asList(
+		// 	new PIDRecordable(motionP, motionI, motionD, leftSource, leftMotors, "leftDistance"),
+		// 	new PIDRecordable(motionP, motionI, motionD, rightSource, rightMotors, "rightDistance") );
+
+		return Arrays.asList(
+			new SpeedControllerRecordable(leftMotors, "leftSpeed"),
+			new SpeedControllerRecordable(rightMotors, "rightSpeed") );
 	}
 
 	@Override

@@ -45,4 +45,13 @@ public class Recording extends LinkedList<RecordingLine> {
     public void executeLine(RecordingLine recordingLine) {
         recordingLine.executeLine(recordables);
     }
+
+    /**
+     * Enable or disable all recordables.
+     */
+    public void setAllEnabled(boolean enable) {
+        for (Recordable recordable : recordables)  {
+            recordable.setSettable(enable);
+        }
+    }
 }

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -49,6 +52,10 @@ public class RecordingFactory {
      */
     public void add(Joystick joystick, Joystick.AxisType axisType, String label) {
         recordableList.add(new JoystickRecordable(joystick, axisType, label));
+    }
+
+    public void add(double p, double i, double d, PIDSource source, PIDOutput output, String label) {
+        recordableList.add(new PIDRecordable(p, i, d, source, output, label));
     }
 
     /**
@@ -158,7 +165,6 @@ public class RecordingFactory {
         @Override
         public double get() {
             return currentSpeed;
-//            return speedController.get();
         }
 
         /**
@@ -168,6 +174,10 @@ public class RecordingFactory {
         public void set(double speed) {
             this.speedController.set(speed);
             currentSpeed = speed;
+        }
+
+        @Override
+        public void setSettable(boolean enable) {
         }
     }
 
@@ -222,6 +232,48 @@ public class RecordingFactory {
         @Override
         public void set(double value) {
         }
+
+        @Override
+        public void setSettable(boolean enable) {
+        }
+    }
+    
+    /**
+     * An object for recording the values that will be played back into a {@link PIDController}.
+     */
+    public static class PIDRecordable implements Recordable {
+
+        private final PIDSource source;
+        private final PIDOutput output;
+        private final PIDController pidController;
+        private final String label;
+
+        public PIDRecordable(double p, double i, double d, PIDSource source, PIDOutput output, String label) {
+            this.label = label;
+            this.source = source;
+            this.output = output;
+            this.pidController = new PIDController(p, i, d, source, output);
+        }
+
+        @Override
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public double get() {
+            return source.pidGet();
+        }
+
+        @Override
+        public void set(double value) {
+            output.pidWrite(value);
+        }
+
+        @Override
+        public void setSettable(boolean enable) {
+            pidController.setEnabled(enable);
+        }
     }
 
     /**
@@ -262,5 +314,10 @@ public class RecordingFactory {
         public void set(double value) {
             System.out.printf("set(%f)%n", value);
         }
+
+        @Override
+        public void setSettable(boolean enable) {
+        }
+
     }
 }
