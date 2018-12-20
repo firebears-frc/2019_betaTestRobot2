@@ -164,7 +164,8 @@ public class RecordingFactory {
          */
         @Override
         public double get() {
-            return currentSpeed;
+            return this.speedController.get();
+            // return currentSpeed;
         }
 
         /**

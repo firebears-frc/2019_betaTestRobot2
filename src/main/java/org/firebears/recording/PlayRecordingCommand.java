@@ -94,10 +94,10 @@ public class PlayRecordingCommand extends Command {
     protected void end() {
         iter = null;
         currentLine = null;
+        recording.setAllEnabled(false);
         if (useLatestRecording) {
             recording = null;
         }
-        recording.setAllEnabled(false);
     }
 
     private Recording loadRecording(File file) {

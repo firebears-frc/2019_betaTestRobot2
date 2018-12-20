@@ -104,7 +104,7 @@ public class Chassis extends Subsystem {
 	 * @param rotation Amount of angular rotation, in the range of -1.0 to 1.0.
 	 */
 	public void driveRobot(double speed, double rotation) {
-		robotDrive.arcadeDrive(speed, rotation);
+		robotDrive.arcadeDrive(-1 * speed, rotation);
 	}
 	
 	/**
