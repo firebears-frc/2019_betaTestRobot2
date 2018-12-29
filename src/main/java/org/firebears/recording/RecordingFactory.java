@@ -77,7 +77,8 @@ public class RecordingFactory {
             double[] datapoint = new double[recordableList.size()];
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("\"")) {
+                char firstCharacter = line.length()>0 ? line.charAt(0) : ' ';
+                if (!Character.isDigit(firstCharacter) && firstCharacter != '.')  {
                     continue;
                 }
                 long deltaTime = readDataLine(line, datapoint);

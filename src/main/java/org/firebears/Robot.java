@@ -2,7 +2,6 @@ package org.firebears;
 
 import static org.firebears.util.Config.*;
 
-import org.firebears.motion.TrajectoryFactory;
 import org.firebears.recording.RecordingFactory;
 import org.firebears.subsystems.Chassis;
 
@@ -25,7 +24,6 @@ public class Robot extends TimedRobot {
 	public static OI oi;
 	public static Chassis chassis;
 	public static RecordingFactory recordingFactory;
-	public static TrajectoryFactory trajectoryFactory;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -41,9 +39,7 @@ public class Robot extends TimedRobot {
 
 		chassis = new Chassis();
 		recordingFactory.addAll(chassis.getRecordables());
-		
-		trajectoryFactory = new TrajectoryFactory();
-		trajectoryFactory.init();
+
 		
 		oi = new OI();
 	}

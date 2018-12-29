@@ -6,7 +6,6 @@ import java.util.List;
 import org.firebears.commands.ChassisDriveCommand;
 import org.firebears.recording.Recordable;
 import org.firebears.recording.RecordingFactory.SpeedControllerRecordable;
-import org.firebears.recording.RecordingFactory.PIDRecordable;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -31,8 +30,8 @@ public class Chassis extends Subsystem {
 	private final DifferentialDrive robotDrive;
 
 	public static final int PID_IDX = 0;
-	public static final double ENCODER_TICKS_PER_FOOT = 52.6 / 12.0;
-	public static final double WHEEL_BASE_IN_FEET = 20.0 / 12.0;
+	public static final double ENCODER_TICKS_PER_INCH = 52.6;
+	public static final double WHEEL_BASE_IN_INCHES = 20.0;
 	public Chassis() {
 		Preferences config = Preferences.getInstance();
 
@@ -62,7 +61,7 @@ public class Chassis extends Subsystem {
 		// 	}
 		// 	@Override
 		// 	public double pidGet() {
-		// 		return feetTraveledLeft();
+		// 		return inchesTraveledLeft();
 		// 	}
 		// 	@Override
 		// 	public PIDSourceType getPIDSourceType() {
@@ -75,7 +74,7 @@ public class Chassis extends Subsystem {
 		// 	}
 		// 	@Override
 		// 	public double pidGet() {
-		// 		return feetTraveledRight();
+		// 		return inchesTraveledRight();
 		// 	}
 		// 	@Override
 		// 	public PIDSourceType getPIDSourceType() {
@@ -118,24 +117,25 @@ public class Chassis extends Subsystem {
 	}
 
 	/**
-	 * @return Distance traveled in feet, since the robot was started.
+	 * @return Distance traveled in inches, since the robot was started.
 	 */
-	public double feetTraveled() {
-		return (feetTraveledLeft() + feetTraveledRight()) / 2;
+	public double inchesTraveled() {
+		return (inchesTraveledLeft() + inchesTraveledRight()) / 2;
 	}
 	
 	/**
-	 * @return Distance traveled by the left wheels in feet.
+	 * @return Distance traveled by the left wheels in inches
+	 * .
 	 */
-	public double feetTraveledLeft() {
-		return frontLeft.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_FOOT;
+	public double inchesTraveledLeft() {
+		return frontLeft.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_INCH;
 	}
 
 	/**
-	 * @return Distance traveled by the right wheels in feet.
+	 * @return Distance traveled by the right wheels in inches.
 	 */
-	public double feetTraveledRight() {
-		return frontRight.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_FOOT;
+	public double inchesTraveledRight() {
+		return frontRight.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_INCH;
 	}
 
 

@@ -26,7 +26,7 @@ public class PlayTrajectoryCommand extends Command {
 	public PlayTrajectoryCommand(Trajectory trajectory) {
 		requires(Robot.chassis);
 		config = Preferences.getInstance();
-		TankModifier modifier = new TankModifier(trajectory).modify(Chassis.WHEEL_BASE_IN_FEET);
+		TankModifier modifier = new TankModifier(trajectory).modify(Chassis.WHEEL_BASE_IN_INCHES);
 		Trajectory leftTrajectory = modifier.getLeftTrajectory();
 		Trajectory rightTrajectory = modifier.getRightTrajectory();
 		leftFollower = makeFollower(leftTrajectory);
@@ -69,8 +69,8 @@ public class PlayTrajectoryCommand extends Command {
 	protected void initialize() {
 		leftFollower.reset();
 		rightFollower.reset();
-		leftInitialDistance = Robot.chassis.feetTraveledLeft();
-		rightInitialDistance = Robot.chassis.feetTraveledRight();
+		leftInitialDistance = Robot.chassis.inchesTraveledLeft();
+		rightInitialDistance = Robot.chassis.inchesTraveledRight();
 	}
 
 	@Override
@@ -80,9 +80,9 @@ public class PlayTrajectoryCommand extends Command {
 
 	@Override
 	protected void execute() {
-		double leftDistance = Robot.chassis.feetTraveledLeft() - leftInitialDistance;
+		double leftDistance = Robot.chassis.inchesTraveledLeft() - leftInitialDistance;
 		double leftSpeed = leftFollower.calculate(leftDistance / 12);
-		double rightDistance = Robot.chassis.feetTraveledRight() - rightInitialDistance;
+		double rightDistance = Robot.chassis.inchesTraveledRight() - rightInitialDistance;
 		double rightSpeed = leftFollower.calculate(rightDistance / 12);
 		Robot.chassis.tankDrive(leftSpeed, rightSpeed);
 	}
