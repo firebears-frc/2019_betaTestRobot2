@@ -11,6 +11,8 @@ import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Preferences;
 
 /**
@@ -36,9 +38,22 @@ public final class Config {
      */
     public static void printPreferences(PrintStream outStream) {
         final Preferences config = Preferences.getInstance();
+        final NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("Preferences");
         SortedSet<String> sortedKeys = new TreeSet<String>(config.getKeys());
         for (String key : sortedKeys) {
-            outStream.printf("%s=%s%n", key, config.getString(key, null));
+            switch (networkTable.getEntry(key).getType()) {
+                case kBoolean :
+                outStream.printf("%s=%b%n", key, config.getBoolean(key, false));
+                break;
+                case kDouble :
+                outStream.printf("%s=%f%n", key, config.getDouble(key, 0.0));
+                break;
+                case kString :
+                outStream.printf("%s=%f%n", key, config.getString(key, null));
+                break;
+                default: 
+                outStream.printf("%s=%s%n", key, config.getString(key, "UNKNOWN"));
+            }
         }
     }
 
