@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem that contains the drive wheels for the robot.
@@ -29,9 +30,12 @@ public class Chassis extends Subsystem {
 	private final SpeedControllerGroup rightMotors;
 	private final DifferentialDrive robotDrive;
 
+	private boolean DEBUG;
+
 	public static final int PID_IDX = 0;
 	public static final double ENCODER_TICKS_PER_INCH = 52.6;
 	public static final double WHEEL_BASE_IN_INCHES = 20.0;
+
 	public Chassis() {
 		Preferences config = Preferences.getInstance();
 
@@ -48,6 +52,8 @@ public class Chassis extends Subsystem {
 		robotDrive.setSafetyEnabled(true);
 		robotDrive.setExpiration(0.1);
 		robotDrive.setMaxOutput(1.0);
+
+		DEBUG = config.getBoolean("debug", false);
 	}
 
 	public List<Recordable> getRecordables() {
@@ -56,39 +62,40 @@ public class Chassis extends Subsystem {
 		// double motionI = config.getDouble("chassis.motion.i", 0.0);
 		// double motionD = config.getDouble("chassis.motion.d", 0.0);
 		// PIDSource leftSource = new PIDSource(){
-		// 	@Override
-		// 	public void setPIDSourceType(PIDSourceType pidSource) {
-		// 	}
-		// 	@Override
-		// 	public double pidGet() {
-		// 		return inchesTraveledLeft();
-		// 	}
-		// 	@Override
-		// 	public PIDSourceType getPIDSourceType() {
-		// 		return PIDSourceType.kDisplacement;
-		// 	}
+		// @Override
+		// public void setPIDSourceType(PIDSourceType pidSource) {
+		// }
+		// @Override
+		// public double pidGet() {
+		// return inchesTraveledLeft();
+		// }
+		// @Override
+		// public PIDSourceType getPIDSourceType() {
+		// return PIDSourceType.kDisplacement;
+		// }
 		// };
 		// PIDSource rightSource = new PIDSource(){
-		// 	@Override
-		// 	public void setPIDSourceType(PIDSourceType pidSource) {
-		// 	}
-		// 	@Override
-		// 	public double pidGet() {
-		// 		return inchesTraveledRight();
-		// 	}
-		// 	@Override
-		// 	public PIDSourceType getPIDSourceType() {
-		// 		return PIDSourceType.kDisplacement;
-		// 	}
+		// @Override
+		// public void setPIDSourceType(PIDSourceType pidSource) {
+		// }
+		// @Override
+		// public double pidGet() {
+		// return inchesTraveledRight();
+		// }
+		// @Override
+		// public PIDSourceType getPIDSourceType() {
+		// return PIDSourceType.kDisplacement;
+		// }
 		// };
 
 		// return Arrays.asList(
-		// 	new PIDRecordable(motionP, motionI, motionD, leftSource, leftMotors, "leftDistance"),
-		// 	new PIDRecordable(motionP, motionI, motionD, rightSource, rightMotors, "rightDistance") );
+		// new PIDRecordable(motionP, motionI, motionD, leftSource, leftMotors,
+		// "leftDistance"),
+		// new PIDRecordable(motionP, motionI, motionD, rightSource, rightMotors,
+		// "rightDistance") );
 
-		return Arrays.asList(
-			new SpeedControllerRecordable(leftMotors, "leftSpeed"),
-			new SpeedControllerRecordable(rightMotors, "rightSpeed") );
+		return Arrays.asList(new SpeedControllerRecordable(leftMotors, "leftSpeed"),
+				new SpeedControllerRecordable(rightMotors, "rightSpeed"));
 	}
 
 	@Override
@@ -105,11 +112,11 @@ public class Chassis extends Subsystem {
 	public void driveRobot(double speed, double rotation) {
 		robotDrive.arcadeDrive(-1 * speed, rotation);
 	}
-	
+
 	/**
 	 * Drive the robot in "tankDrive" format.
 	 * 
-	 * @param leftSpeed Speed for the left motor, in the range of -1.0 to 1.0.
+	 * @param leftSpeed  Speed for the left motor, in the range of -1.0 to 1.0.
 	 * @param rightSpeed Speed for the left motor, in the range of -1.0 to 1.0.
 	 */
 	public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -122,10 +129,9 @@ public class Chassis extends Subsystem {
 	public double inchesTraveled() {
 		return (inchesTraveledLeft() + inchesTraveledRight()) / 2;
 	}
-	
+
 	/**
-	 * @return Distance traveled by the left wheels in inches
-	 * .
+	 * @return Distance traveled by the left wheels in inches .
 	 */
 	public double inchesTraveledLeft() {
 		return frontLeft.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_INCH;
@@ -138,9 +144,34 @@ public class Chassis extends Subsystem {
 		return frontRight.getSelectedSensorPosition(PID_IDX) / ENCODER_TICKS_PER_INCH;
 	}
 
+	int count = 0;
+	long prevTime = System.currentTimeMillis();
+	double prevDistance = 0.0, prevSpeed = 0.0, prevAcceleration = 0.0, prevJerk = 0.0;
+	double maxSpeed = 0.0, maxAcceleration = 0.0, maxJerk = 0.0;
 
 	@Override
 	public void periodic() {
-		// Put code here to be run every loop
+		if (DEBUG && ++count % 10 == 0) {
+			double speed = 0.0, acceleration = 0.0, jerk = 0.0;
+			long timeDiff = System.currentTimeMillis() - prevTime;
+			speed = Math.abs(inchesTraveled() - prevDistance) / timeDiff;
+			acceleration = Math.abs(speed - prevSpeed) / timeDiff;
+			jerk = Math.abs(jerk - prevJerk) / timeDiff;
+			SmartDashboard.putNumber("Speed", speed);
+			SmartDashboard.putNumber("Acceleration", acceleration);
+			SmartDashboard.putNumber("Jerk", jerk);
+			if (speed > maxSpeed || acceleration > maxAcceleration || jerk > maxJerk) {
+				maxSpeed = Math.max(maxSpeed, speed);
+				maxAcceleration = Math.max(maxAcceleration, acceleration);
+				maxJerk = Math.max(maxJerk, jerk);
+				System.out.printf("Chassis: %3.1f/%3.1f   %3.1f/%3.1f   %3.1f/%3.1f %n", 
+				    speed, maxSpeed, acceleration, maxAcceleration, jerk, maxJerk);
+			}
+			prevTime = System.currentTimeMillis();
+			prevDistance = inchesTraveled();
+			prevSpeed = speed;
+			prevAcceleration = acceleration;
+			prevJerk = jerk;
+		}
 	}
 }
