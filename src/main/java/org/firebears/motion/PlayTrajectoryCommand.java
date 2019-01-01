@@ -13,8 +13,8 @@ public class PlayTrajectoryCommand extends Command {
 	private final DistanceFollower rightFollower;
 	private double leftInitialDistance = 0.0;
 	private double rightInitialDistance = 0.0;
-	private final Preferences config;
 	private boolean initialBrakeMode;
+	private final Preferences config;
 
 	/**
 	 * @param leftTrajectory  Trajectory of the left wheel of the robot.
@@ -56,9 +56,9 @@ public class PlayTrajectoryCommand extends Command {
 	@Override
 	protected void execute() {
 		double leftDistance = Robot.chassis.inchesTraveledLeft() - leftInitialDistance;
-		double leftSpeed = leftFollower.calculate(leftDistance / 12);
+		double leftSpeed = leftFollower.calculate(leftDistance);
 		double rightDistance = Robot.chassis.inchesTraveledRight() - rightInitialDistance;
-		double rightSpeed = leftFollower.calculate(rightDistance / 12);
+		double rightSpeed = leftFollower.calculate(rightDistance);
 		Robot.chassis.tankDrive(leftSpeed, rightSpeed);
 	}
 
