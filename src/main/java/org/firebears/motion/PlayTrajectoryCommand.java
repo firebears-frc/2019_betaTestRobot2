@@ -45,7 +45,7 @@ public class PlayTrajectoryCommand extends Command {
 		leftInitialDistance = Robot.chassis.inchesTraveledLeft();
 		rightInitialDistance = Robot.chassis.inchesTraveledRight();
 		initialBrakeMode = Robot.chassis.getBrakeMode();
-		Robot.chassis.setBrakeMode(false);
+		Robot.chassis.setBrakeMode(config.getBoolean("motion.brakeMode", true));
 	}
 
 	@Override
