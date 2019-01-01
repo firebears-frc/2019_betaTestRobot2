@@ -7,6 +7,7 @@ import org.firebears.commands.ChassisDriveCommand;
 import org.firebears.recording.Recordable;
 import org.firebears.recording.RecordingFactory.SpeedControllerRecordable;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.PIDSource;
@@ -31,6 +32,7 @@ public class Chassis extends Subsystem {
 	private final DifferentialDrive robotDrive;
 
 	private boolean DEBUG;
+	private boolean brakeMode;
 
 	public static final int PID_IDX = 0;
 	public static final double ENCODER_TICKS_PER_INCH = 52.6;
@@ -52,6 +54,7 @@ public class Chassis extends Subsystem {
 		robotDrive.setSafetyEnabled(true);
 		robotDrive.setExpiration(0.1);
 		robotDrive.setMaxOutput(1.0);
+		setBrakeMode(false);
 
 		DEBUG = config.getBoolean("debug", false);
 	}
@@ -101,6 +104,18 @@ public class Chassis extends Subsystem {
 	@Override
 	public void initDefaultCommand() {
 		setDefaultCommand(new ChassisDriveCommand());
+	}
+
+	public void setBrakeMode(boolean brakeMode) {
+		frontLeft.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+		rearLeft.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+		frontRight.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+		rearRight.setNeutralMode(brakeMode ? NeutralMode.Brake : NeutralMode.Coast);
+		this.brakeMode = brakeMode;
+	}
+
+	public boolean getBrakeMode() {
+		return this.brakeMode;
 	}
 
 	/**

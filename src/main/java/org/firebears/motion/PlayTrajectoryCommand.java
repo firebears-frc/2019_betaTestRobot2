@@ -1,16 +1,11 @@
 package org.firebears.motion;
 
-import java.io.File;
-
 import org.firebears.Robot;
-import org.firebears.subsystems.Chassis;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
-import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.DistanceFollower;
-import jaci.pathfinder.modifiers.TankModifier;
 
 public class PlayTrajectoryCommand extends Command {
 
@@ -19,19 +14,7 @@ public class PlayTrajectoryCommand extends Command {
 	private double leftInitialDistance = 0.0;
 	private double rightInitialDistance = 0.0;
 	private final Preferences config;
-
-	/**
-	 * @param trajectory Trajectory of the center of the robot.
-	 */
-	public PlayTrajectoryCommand(Trajectory trajectory) {
-		requires(Robot.chassis);
-		config = Preferences.getInstance();
-		TankModifier modifier = new TankModifier(trajectory).modify(Chassis.WHEEL_BASE_IN_INCHES);
-		Trajectory leftTrajectory = modifier.getLeftTrajectory();
-		Trajectory rightTrajectory = modifier.getRightTrajectory();
-		leftFollower = makeFollower(leftTrajectory);
-		rightFollower = makeFollower(rightTrajectory);
-	}
+	private boolean initialBrakeMode;
 
 	/**
 	 * @param leftTrajectory  Trajectory of the left wheel of the robot.
@@ -44,24 +27,14 @@ public class PlayTrajectoryCommand extends Command {
 		rightFollower = makeFollower(rightTrajectory);
 	}
 
-	/**
-	 * @param leftTrajectoryFile  Full file path for CSV file giving the trajectory of the left wheel.
-	 * @param rightTrajectoryFile Full file path for CSV file giving the trajectory of the right wheel.
-	 */
-	public PlayTrajectoryCommand(String leftTrajectoryFile, String rightTrajectoryFile) {
-		requires(Robot.chassis);
-		config = Preferences.getInstance();
-		Trajectory leftTrajectory = Pathfinder.readFromCSV(new File(leftTrajectoryFile));
-		Trajectory rightTrajectory = Pathfinder.readFromCSV(new File(rightTrajectoryFile));
-		leftFollower = makeFollower(leftTrajectory);
-		rightFollower = makeFollower(rightTrajectory);
-	}
-
 	private DistanceFollower makeFollower(Trajectory trajectory) {
 		DistanceFollower follower = new DistanceFollower(trajectory);
-		follower.configurePIDVA(config.getDouble("motion.follower.P", 1.0), config.getDouble("motion.follower.I", 0.0),
-				config.getDouble("motion.follower.D", 0.0), config.getDouble("motion.follower.V", 0.0),
-				config.getDouble("motion.follower.A", 0.0));
+		final double kp = config.getDouble("motion.follower.P", 1.0);
+		final double ki = config.getDouble("motion.follower.I", 1.0);
+		final double kd = config.getDouble("motion.follower.D", 1.0);
+		final double kv = config.getDouble("motion.follower.V", 1.0);
+		final double ka = config.getDouble("motion.follower.A", 1.0);
+		follower.configurePIDVA(kp, ki, kd, kv, ka);
 		return follower;
 	}
 
@@ -71,6 +44,8 @@ public class PlayTrajectoryCommand extends Command {
 		rightFollower.reset();
 		leftInitialDistance = Robot.chassis.inchesTraveledLeft();
 		rightInitialDistance = Robot.chassis.inchesTraveledRight();
+		initialBrakeMode = Robot.chassis.getBrakeMode();
+		Robot.chassis.setBrakeMode(false);
 	}
 
 	@Override
@@ -89,7 +64,8 @@ public class PlayTrajectoryCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.chassis.driveRobot(0.0, 0.0);
+		Robot.chassis.tankDrive(0.0, 0.0);
+		Robot.chassis.setBrakeMode(initialBrakeMode);
 	}
 
 }
