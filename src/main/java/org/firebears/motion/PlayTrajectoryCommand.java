@@ -30,10 +30,10 @@ public class PlayTrajectoryCommand extends Command {
 	private DistanceFollower makeFollower(Trajectory trajectory) {
 		DistanceFollower follower = new DistanceFollower(trajectory);
 		final double kp = config.getDouble("motion.follower.P", 1.0);
-		final double ki = config.getDouble("motion.follower.I", 1.0);
-		final double kd = config.getDouble("motion.follower.D", 1.0);
-		final double kv = config.getDouble("motion.follower.V", 1.0);
-		final double ka = config.getDouble("motion.follower.A", 1.0);
+		final double ki = config.getDouble("motion.follower.I", 0.0);
+		final double kd = config.getDouble("motion.follower.D", 0.0);
+		final double kv = config.getDouble("motion.follower.V", 0.0);
+		final double ka = config.getDouble("motion.follower.A", 0.0);
 		follower.configurePIDVA(kp, ki, kd, kv, ka);
 		return follower;
 	}
