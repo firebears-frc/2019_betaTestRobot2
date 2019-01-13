@@ -15,6 +15,7 @@ public class PlayTrajectoryCommand extends Command {
 	private double rightInitialDistance = 0.0;
 	private boolean initialBrakeMode;
 	private final Preferences config;
+	private final boolean DEBUG;
 
 	/**
 	 * @param leftTrajectory  Trajectory of the left wheel of the robot.
@@ -25,6 +26,7 @@ public class PlayTrajectoryCommand extends Command {
 		config = Preferences.getInstance();
 		leftFollower = makeFollower(leftTrajectory);
 		rightFollower = makeFollower(rightTrajectory);
+		DEBUG = config.getBoolean("debug", false);
 	}
 
 	private DistanceFollower makeFollower(Trajectory trajectory) {
@@ -32,7 +34,7 @@ public class PlayTrajectoryCommand extends Command {
 		final double kp = config.getDouble("motion.follower.P", 1.0);
 		final double ki = config.getDouble("motion.follower.I", 0.0);
 		final double kd = config.getDouble("motion.follower.D", 0.0);
-		final double kv = config.getDouble("motion.follower.V", 0.0);
+		final double kv = 1.0 / config.getDouble("motion.maxVelocity", 10.0);
 		final double ka = config.getDouble("motion.follower.A", 0.0);
 		follower.configurePIDVA(kp, ki, kd, kv, ka);
 		return follower;
@@ -60,6 +62,9 @@ public class PlayTrajectoryCommand extends Command {
 		double rightDistance = Robot.chassis.inchesTraveledRight() - rightInitialDistance;
 		double rightSpeed = leftFollower.calculate(rightDistance);
 		Robot.chassis.tankDrive(leftSpeed, rightSpeed);
+		if (DEBUG) { 
+			System.out.println("::: motion: (" + leftSpeed + ", " + rightSpeed + ")  [" + leftDistance + ", " + rightDistance + "]");  
+		}
 	}
 
 	@Override

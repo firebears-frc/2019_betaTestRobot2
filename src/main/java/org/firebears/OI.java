@@ -7,7 +7,8 @@ import org.firebears.recording.PlayRecordingCommand;
 import org.firebears.recording.StartRecordingCommand;
 import org.firebears.recording.StopRecordingCommand;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
@@ -20,12 +21,12 @@ import jaci.pathfinder.Trajectory;
  */
 public class OI {
 
-	private Joystick joystick;
+	private XboxController joystick;
 
 	public OI() {
 		Preferences config = Preferences.getInstance();
 		
-		joystick = new Joystick(0);
+		joystick = new XboxController(0);
 
 		JoystickButton startRecordingButton = new JoystickButton(joystick, config.getInt("joystick.startRecordingButton", 8));
 		Command startRecordingCommand = new StartRecordingCommand(Robot.recordingFactory);
@@ -39,20 +40,20 @@ public class OI {
 		Command playRecordingCommand = new PlayRecordingCommand(Robot.recordingFactory);
 		playRecordingButton.whenPressed(playRecordingCommand);
 		
-		JoystickButton playTrajectoryButton_leftScale = new JoystickButton(joystick, config.getInt("joystick.playTrajectoryButton_leftScale", 9));
-		Trajectory leftScale_left = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/leftScale.left.pf1.csv"));
-		Trajectory leftScale_right = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/leftScale.left.pf1.csv"));
-		Command playTrajectoryCommand_leftScale = new PlayTrajectoryCommand(leftScale_left, leftScale_right);
-		playTrajectoryButton_leftScale.whenPressed(playTrajectoryCommand_leftScale);
+		JoystickButton playTrajectoryButton_Short = new JoystickButton(joystick, config.getInt("joystick.playTrajectoryButton_Short", 9));
+		Trajectory Short_left  = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/Short.left.pf1.csv"));
+		Trajectory Short_right = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/Short.right.pf1.csv"));
+		Command playTrajectoryCommand_Short = new PlayTrajectoryCommand(Short_left, Short_right);
+		playTrajectoryButton_Short.whenPressed(playTrajectoryCommand_Short);
 
-		JoystickButton playTrajectoryButton_leftSwitch = new JoystickButton(joystick, config.getInt("joystick.playTrajectoryButton_leftSwitch", 11));
-		Trajectory leftSwitch_left = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/leftSwitch.left.pf1.csv"));
-		Trajectory leftSwitch_right = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/leftSwitch.left.pf1.csv"));
-		Command playTrajectoryCommand_leftSwitch = new PlayTrajectoryCommand(leftSwitch_left, leftSwitch_right);
-		playTrajectoryButton_leftSwitch.whenPressed(playTrajectoryCommand_leftSwitch);
+		JoystickButton playTrajectoryButton_Straight = new JoystickButton(joystick, config.getInt("joystick.playTrajectoryButton_Straight", 11));
+		Trajectory Straight_left  = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/Straight.left.pf1.csv"));
+		Trajectory Straight_right = Pathfinder.readFromCSV(new File("/home/lvuser/deploy/paths/Straight.right.pf1.csv"));
+		Command playTrajectoryCommand_Straight = new PlayTrajectoryCommand(Straight_left, Straight_right);
+		playTrajectoryButton_Straight.whenPressed(playTrajectoryCommand_Straight);
 	}
 
-	public Joystick getJoystick() {
+	public GenericHID getJoystick() {
 		return joystick;
 	}
 }
