@@ -190,6 +190,8 @@ public class Chassis extends Subsystem {
 			prevSpeed = speed;
 			prevAcceleration = acceleration;
 			prevJerk = jerk;
+			SmartDashboard.putNumber("Left Distance", inchesTraveledLeft());
+			SmartDashboard.putNumber("Right Distance", inchesTraveledRight());
 		}
 	}
 }
